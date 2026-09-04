@@ -65,6 +65,7 @@ ipa-editor/
 ├── apple-touch-icon.png  # 180x180 アプリアイコン
 ├── og-image.png          # 1200x630 OGPプレビュー画像
 ├── README.md             # 本ドキュメント
+├── CHECKLIST.md          # 全機能の検証チェックリスト & 仕様書
 ├── LICENSE               # MITライセンス
 └── .gitignore            # Git除外設定
 ```
