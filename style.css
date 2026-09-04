@@ -572,12 +572,14 @@ body {
   border-right: 1px solid var(--border-light) !important;
 }
 
-/* 補助記号・超分節要素セクションのスクロールバー完全抑制（デスクトップ） */
-#sec-diacritics,
-#sec-diacritics .table-responsive,
-#sec-suprasegmentals,
-#sec-suprasegmentals .table-responsive {
-  overflow-x: hidden !important;
+/* 補助記号・超分節要素セクションのスクロールバー抑制（デスクトップ専用: 769px以上） */
+@media (min-width: 769px) {
+  #sec-diacritics,
+  #sec-diacritics .table-responsive,
+  #sec-suprasegmentals,
+  #sec-suprasegmentals .table-responsive {
+    overflow-x: hidden !important;
+  }
 }
 
 /* ==========================================================
@@ -951,21 +953,36 @@ button.ipa-btn.tone-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-main);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--text-main) !important;
+  text-decoration: none;
+  font-family: var(--font-ui);
+  font-size: 11px;
   font-weight: 700;
-  transition: color 0.15s ease;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-mid);
+  border-radius: 0;
+  transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
 }
 
 .modal-link:hover {
-  color: var(--accent-red);
+  background: var(--text-main);
+  color: #ffffff !important;
+  border-color: var(--border-strong);
+}
+
+.modal-link:hover .modal-link-icon {
+  fill: #ffffff;
 }
 
 .modal-link-icon {
-  width: 14px;
-  height: 14px;
-  vertical-align: middle;
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: -1px;
 }
 
 /* ==========================================================
