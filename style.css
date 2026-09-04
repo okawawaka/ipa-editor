@@ -1,0 +1,1002 @@
+/* ==========================================================
+   国際音声字母 (IPA) キーボード - スイス・スタイル (Swiss Typographic Style)
+   Design Principles:
+   - Strict Grid System & Rational Typography
+   - Zero Corner Radii (border-radius: 0)
+   - Zero Artificial Shadows (box-shadow: none)
+   - Full OpenType Ligature Support (Tone Letter Ligatures)
+   - Professional SIL Phonetic Typography (Charis SIL)
+   ========================================================== */
+
+:root {
+  --bg-page: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f4f5;
+  --bg-header: #18181b;
+  --text-header: #ffffff;
+  --bg-empty: #fcfcfc;
+
+  --border-strong: #000000;
+  --border-mid: #27272a;
+  --border-light: #d4d4d8;
+  --border-subtle: #e4e4e7;
+
+  --text-main: #09090b;
+  --text-muted: #52525b;
+  --text-dim: #71717a;
+
+  --accent-red: #e11d48;
+
+  --font-main: "Noto Sans", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: var(--font-main);
+  --font-ipa: var(--font-main);
+}
+
+/* リセット */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  background-color: var(--bg-page);
+  padding: 0 16px 40px;
+}
+
+.app-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ==========================================================
+   スティッキー固定ヘッダー & 入力パネル
+   ========================================================== */
+.sticky-header-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg-page);
+  border-bottom: 2px solid var(--border-strong);
+  padding: 10px 0 8px;
+  margin-bottom: 16px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.app-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.app-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 入力欄 & 操作ボタングループ */
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.textarea-container {
+  flex: 1;
+  position: relative;
+}
+
+#ipa-input {
+  width: 100%;
+  height: 56px;
+  padding: 8px 12px;
+  font-family: var(--font-ipa);
+  font-size: 24px;
+  line-height: 1.25;
+  color: var(--text-main);
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  resize: none;
+  outline: none;
+  /* OpenType合字の有効化（Chao Tone Letter Ligatures） */
+  font-feature-settings: "liga" 1, "dlig" 1;
+  font-variant-ligatures: normal contextual common-ligatures;
+}
+
+#ipa-input:focus {
+  border-width: 2px;
+  padding: 7px 11px;
+}
+
+.char-counter {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 1px 4px;
+  border: 1px solid var(--border-light);
+  border-radius: 0;
+  pointer-events: none;
+}
+
+/* 操作ボタングループ */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 4px;
+  align-content: stretch;
+}
+
+.swiss-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  height: 26px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background-color 0.1s, color 0.1s;
+}
+
+.swiss-btn:hover {
+  background: var(--text-main);
+  color: #ffffff;
+}
+
+.swiss-btn:active {
+  background: #27272a;
+  color: #ffffff;
+}
+
+.swiss-btn.btn-black {
+  background: var(--text-main);
+  color: #ffffff;
+  border-color: var(--text-main);
+}
+
+.swiss-btn.btn-black:hover {
+  background: #27272a;
+}
+
+.swiss-btn.btn-help {
+  font-weight: 800;
+  padding: 0 10px;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+/* ホバーステータス情報バー */
+.status-ticker {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 11px;
+  padding: 5px 8px;
+  margin-top: 8px;
+  background: var(--bg-subtle);
+  border-left: 3px solid var(--border-strong);
+  min-height: 24px;
+}
+
+.status-symbol {
+  font-family: var(--font-ipa);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 32px;
+  font-feature-settings: "liga" 1;
+}
+
+.status-name {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.status-desc {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* モバイル用タブ（デフォルト非表示） */
+.mobile-tabs {
+  display: none;
+  gap: 4px;
+  margin-top: 8px;
+  overflow-x: auto;
+  border-top: 1px solid var(--border-light);
+  padding-top: 6px;
+}
+
+.mobile-tab-btn {
+  padding: 6px 10px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mobile-tab-btn.active {
+  background: var(--text-main);
+  color: #ffffff;
+}
+
+/* ==========================================================
+   盤面メインレイアウト（合理的スイス・グリッド 3段構造）
+   Tier 1: 肺臓気流子音 (全幅 100%)
+   Tier 2: 非肺臓気流・二重調音 (左 56%) ＋ 母音台形 (右 44%)
+   Tier 3: 補助記号 (左 50%) ＋ 声調・超分節 (右 50%)
+   ========================================================== */
+.ipa-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Tier 1: 肺臓気流子音 (Full Width) */
+.layout-tier-1 {
+  width: 100%;
+}
+
+/* Tier 2: 非肺臓気流 ＋ 母音 */
+.layout-tier-2 {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.col-tier2-left {
+  flex: 1.25;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.col-tier2-right {
+  flex: 1;
+  min-width: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tier 3: 補助記号 ＋ 声調・超分節 */
+.layout-tier-3 {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.col-tier3-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.col-tier3-right {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ==========================================================
+   セクション構造 & テーブルデザイン
+   ========================================================== */
+.swiss-section {
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.swiss-section-header {
+  background: var(--bg-header);
+  color: var(--text-header);
+  padding: 4px 8px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.swiss-section-header .sub {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* テーブルスタイル（行列・マトリクス形式） */
+.swiss-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 11px;
+}
+
+.swiss-table-fixed {
+  table-layout: fixed;
+}
+
+.swiss-table th,
+.swiss-table td {
+  border: 1px solid var(--border-light);
+  padding: 0;
+  height: 25px;
+  vertical-align: middle;
+}
+
+/* すべての列見出し (thead th, tbody th) のデザイン統一 */
+.swiss-table th {
+  background: #f4f4f5;
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 3px;
+  border-color: var(--border-light);
+}
+
+/* 列見出し行 (header-row) の下部境界線を 2px solid #000000 で統一 */
+.swiss-table thead tr:last-child th,
+.swiss-table tr.header-row th,
+.swiss-table tr.header-row td {
+  border-bottom: 2px solid var(--border-strong) !important;
+  font-size: 9.5px;
+}
+
+.swiss-table tr.header-row th:not(.origin-cell) {
+  color: var(--text-muted);
+}
+
+/* 表頭の左上原点交差セル (origin-cell) */
+.swiss-table th.origin-cell,
+.swiss-table td.origin-cell {
+  background: #ebebee;
+  color: var(--text-main) !important;
+  font-size: 9.5px !important;
+  font-weight: 700;
+  text-align: center;
+  border-right: 2px solid var(--border-strong) !important;
+  border-bottom: 2px solid var(--border-strong) !important;
+  white-space: nowrap;
+}
+
+/* 大見出し・カテゴリー区分（統一ブラック帯） */
+.swiss-table .category-header {
+  background: #18181b !important;
+  color: #ffffff !important;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 4px 8px;
+  border: 1px solid #18181b !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+/* 行見出し (row-header) */
+.swiss-table .row-header {
+  background: #f4f4f5;
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  padding: 0 8px;
+  white-space: nowrap;
+  border-right: 2px solid var(--border-strong);
+  border-left: 1px solid var(--border-light);
+}
+
+.swiss-table .cell-empty {
+  background-color: var(--bg-empty);
+}
+
+/* ==========================================================
+   リスト形式テーブル (swiss-table-list: 補助記号・超分節要素)
+   2列1組（区分＋記号）のキー・バリュー形式
+   ペア間を 2px 黒線で明確に区切り、ペア内部は 1px 軽境界線
+   ========================================================== */
+.swiss-table-list {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 11px;
+}
+
+.swiss-table-list th,
+.swiss-table-list td {
+  border: 1px solid var(--border-light);
+  padding: 0;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.swiss-table-list th {
+  background: #f4f4f5;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 2px;
+  border-color: var(--border-light);
+}
+
+.swiss-table-list thead tr:last-child th,
+.swiss-table-list tr.header-row th {
+  border-bottom: 2px solid var(--border-strong) !important;
+}
+
+/* 項目ラベル (item-label / row-header): ペアの左側セル */
+.swiss-table-list .item-label,
+.swiss-table-list .row-header {
+  background: #f4f4f5;
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  padding: 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid var(--border-light) !important;
+  border-left: 1px solid var(--border-light);
+}
+
+/* ペアの区切り境界線: 各ペアの右端（列2、列4）に 2px solid #000000 */
+.swiss-table-list th:nth-child(2),
+.swiss-table-list th:nth-child(4),
+.swiss-table-list td:nth-child(2),
+.swiss-table-list td:nth-child(4),
+.swiss-table-list .pair-end {
+  border-right: 2px solid var(--border-strong) !important;
+}
+
+/* 大見出し・カテゴリー区分（統一ブラック帯） */
+.swiss-table-list .category-header {
+  background: #18181b !important;
+  color: #ffffff !important;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 4px 8px;
+  border: 1px solid #18181b !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+.swiss-table-list .cell-empty {
+  background-color: var(--bg-empty);
+}
+
+/* 複数記号セル（上寄り・下寄り・R音性・区切り等） */
+.swiss-table td.cell-multi-btn,
+.swiss-table-list td.cell-multi-btn {
+  padding: 0 !important;
+}
+
+.cell-multi-btn {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cell-multi-btn button.ipa-btn {
+  flex: 1 1 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: 0 1px !important;
+  font-size: 13.5px !important;
+}
+
+.cell-multi-btn button.ipa-btn:not(:last-child) {
+  border-right: 1px solid var(--border-light) !important;
+}
+
+/* 補助記号・超分節要素セクションのスクロールバー完全抑制（デスクトップ） */
+#sec-diacritics,
+#sec-diacritics .table-responsive,
+#sec-suprasegmentals,
+#sec-suprasegmentals .table-responsive {
+  overflow-x: hidden !important;
+}
+
+/* ==========================================================
+   IPA記号ボタン（Noto Sans 公式フォント ＆ 合字対応）
+   ========================================================== */
+button.ipa-btn {
+  width: 100%;
+  height: 100%;
+  min-height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-family: var(--font-ipa);
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 2px;
+  outline: none;
+  user-select: none;
+  border-radius: 0;
+  white-space: nowrap;
+  transition: background-color 0.08s, color 0.08s;
+  /* OpenType合字設定（Chao Tone Letter Ligatures & Combining Diacritics） */
+  font-feature-settings: "liga" 1, "calt" 1, "ccmp" 1;
+  font-variant-ligatures: normal contextual common-ligatures;
+}
+
+button.ipa-btn:hover {
+  background-color: var(--text-main);
+  color: #ffffff;
+}
+
+button.ipa-btn:active {
+  background-color: #3f3f46;
+  color: #ffffff;
+}
+
+/* 無声/有声の境界点線 */
+td.td-voiceless {
+  border-right: 1px dashed var(--border-light) !important;
+}
+
+td.td-voiced {
+  border-left: none !important;
+}
+
+/* 補助記号ボタン */
+button.ipa-btn.mark-btn {
+  font-size: 15px;
+}
+
+/* トーンバー合字ボタン (垂直スレンダープロポーション) */
+button.ipa-btn.tone-btn {
+  width: 100%;
+  height: 100%;
+  min-height: 28px;
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tone-icon {
+  width: 12px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* ==========================================================
+   母音台形 (Vowel Trapezoid) - 完全枠内収容設計
+   ========================================================== */
+.vowel-board {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vowel-diagram-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+
+.vowel-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 176px;
+  width: 68px;
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-muted);
+  text-align: right;
+  padding: 2px 4px 2px 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vowel-stage {
+  position: relative;
+  width: 270px;
+  height: 176px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.vowel-stage svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.vowel-pair {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.vowel-pair .v-dot {
+  font-size: 8px;
+  color: var(--border-strong);
+  margin: 0 1px;
+  line-height: 1;
+}
+
+.vowel-pair .ipa-btn {
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.vowel-x-axis {
+  display: flex;
+  justify-content: space-between;
+  width: 270px;
+  margin-top: 6px;
+  margin-left: 68px;
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+
+/* ==========================================================
+   スマートツールチップ（スイス・タイポグラフィ仕様）
+   ========================================================== */
+#smart-tooltip {
+  position: fixed;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #27272a;
+  border-radius: 0;
+  padding: 8px 12px;
+  pointer-events: none;
+  z-index: 10000;
+  max-width: 320px;
+}
+
+.tt-symbol {
+  font-family: var(--font-ipa);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1;
+  color: #ffffff;
+  border-right: 1px solid #3f3f46;
+  padding-right: 10px;
+  min-width: 38px;
+  text-align: center;
+  font-feature-settings: "liga" 1;
+}
+
+.tt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tt-name {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.tt-en {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  color: #a1a1aa;
+}
+
+.tt-cat {
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #d4d4d8;
+}
+
+/* トースト通知 */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #3f3f46;
+  padding: 8px 20px;
+  border-radius: 0;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10001;
+}
+
+#toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================
+   「？」コマンド 操作説明モーダル
+   ========================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: #ffffff;
+  border: 2px solid var(--border-strong);
+  border-radius: 0;
+  width: 92%;
+  max-width: 620px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 2px solid var(--border-strong);
+  background: var(--bg-header);
+  color: #ffffff;
+}
+
+.modal-title {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--accent-red);
+}
+
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+.modal-body h3 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 16px 0 8px;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 4px;
+}
+
+.modal-body h3:first-child {
+  margin-top: 0;
+}
+
+.modal-body p {
+  margin-bottom: 10px;
+}
+
+.modal-body ul {
+  margin-left: 20px;
+  margin-bottom: 14px;
+}
+
+.modal-body li {
+  margin-bottom: 4px;
+}
+
+.modal-body kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f4f4f5;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+}
+
+/* ==========================================================
+   レスポンシブデザイン（モバイル・タブレット）
+   ========================================================== */
+@media (max-width: 1200px) {
+  .layout-tier-2,
+  .layout-tier-3 {
+    flex-direction: column;
+  }
+
+  .col-tier2-right {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 0 8px 30px;
+  }
+
+  .mobile-tabs {
+    display: flex;
+  }
+
+  .action-grid {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  .swiss-section {
+    display: none;
+  }
+
+  .swiss-section.tab-active {
+    display: block;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .swiss-table {
+    min-width: 640px;
+  }
+
+  .swiss-table td, .swiss-table th {
+    height: 32px;
+  }
+
+  button.ipa-btn {
+    min-height: 30px;
+    font-size: 16px;
+  }
+}

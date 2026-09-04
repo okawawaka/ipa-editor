@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPA入力 国際音声字母エディタ - International Phonetic Alphabet Editor</title>
+  <meta name="description" content="スイス・スタイルによる現代的・合理的な国際音声字母（IPA）エディタ。339記号・SIL規格合字・声調バー完全対応。">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IPA入力 国際音声字母エディタ">
+  <meta property="og:description" content="スイス・スタイルによる現代的・合理的な国際音声字母（IPA）エディタ。339記号・SIL規格合字・声調バー完全対応。">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:site_name" content="IPA入力 国際音声字母エディタ">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IPA入力 国際音声字母エディタ">
+  <meta name="twitter:description" content="スイス・スタイルによる現代的・合理的な国際音声字母（IPA）エディタ。339記号・SIL規格合字・声調バー完全対応。">
+  <meta name="twitter:image" content="og-image.png">
+
+  <!-- スイスタイポグラフィ (Google Fonts: Noto Sans & Noto Sans JP) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- スティッキー固定入力バー -->
+  <header class="sticky-header-container">
+    <div class="header-meta">
+      <div class="title-wrap">
+        <h1 class="app-title">IPA入力 国際音声字母エディタ</h1>
+        <span class="app-subtitle">INTERNATIONAL PHONETIC ALPHABET EDITOR</span>
+      </div>
+      <div class="header-controls">
+        <button type="button" id="help-trigger-btn" class="swiss-btn btn-help" title="ヘルプ・操作説明 (?)">HELP [ ? ]</button>
+      </div>
+    </div>
+
+    <!-- 入力行 -->
+    <div class="input-row">
+      <div class="textarea-container">
+        <textarea id="ipa-input" rows="2" placeholder="字母をクリックして入力... (補助記号は直前の文字と自動結合し、声調バーは合字として連結します)" spellcheck="false" autocomplete="off"></textarea>
+        <div id="char-count" class="char-counter">0 CHARS</div>
+      </div>
+      <div class="action-grid">
+        <button type="button" id="btn-copy" class="swiss-btn btn-black" title="クリップボードにコピー">COPY</button>
+        <button type="button" id="btn-space" class="swiss-btn">SPACE</button>
+        <button type="button" id="btn-bracket" class="swiss-btn" title="精密表記 [ ] で囲む">[ &nbsp; ]</button>
+        <button type="button" id="btn-slash" class="swiss-btn" title="音素表記 / / で囲む">/ &nbsp; /</button>
+        <button type="button" id="btn-backspace" class="swiss-btn" title="1文字消す">⌫ DELETE</button>
+        <button type="button" id="btn-clear" class="swiss-btn" title="全消去">CLEAR</button>
+        <button type="button" id="btn-sample" class="swiss-btn" title="サンプルを挿入">SAMPLE</button>
+      </div>
+    </div>
+
+    <!-- ホバーステータス情報バー -->
+    <div class="status-ticker">
+      <span id="status-symbol" class="status-symbol">[ - ]</span>
+      <span id="status-name" class="status-name">字母にカーソルを合わせると名称と調音位置の解説が表示されます</span>
+      <span id="status-desc" class="status-desc"></span>
+    </div>
+
+    <!-- モバイル用タブ（画面幅768px以下で表示） -->
+    <nav class="mobile-tabs" aria-label="セクション切り替え">
+      <button type="button" class="mobile-tab-btn active" data-target="sec-pulmonic">肺臓気流</button>
+      <button type="button" class="mobile-tab-btn" data-target="sec-non-pulmonic">非肺臓・二重</button>
+      <button type="button" class="mobile-tab-btn" data-target="sec-vowels">母音</button>
+      <button type="button" class="mobile-tab-btn" data-target="sec-diacritics">補助記号</button>
+      <button type="button" class="mobile-tab-btn" data-target="sec-suprasegmentals">声調・超分節</button>
+    </nav>
+  </header>
+
+  <!-- 盤面メインレイアウト -->
+  <main class="ipa-layout">
+
+    <!-- Tier 1: 肺臓気流子音 (全幅 100%) -->
+    <div class="layout-tier-1">
+
+      <!-- 肺臓気流 -->
+      <section id="sec-pulmonic" class="swiss-section tab-active">
+        <div class="swiss-section-header">
+          <span>肺臓気流子音 (PULMONIC CONSONANTS)</span>
+          <span class="sub">破裂 • 鼻音 • 摩擦 • 接近 • ふるえ • 側面</span>
+        </div>
+        <div class="table-responsive">
+          <table class="swiss-table">
+            <thead>
+              <tr>
+                <th rowspan="2" class="origin-cell" style="width: 86px;">調音法 \ 位置</th>
+                <th colspan="2">両唇</th>
+                <th colspan="2">唇歯</th>
+                <th colspan="2">舌唇</th>
+                <th colspan="2">歯</th>
+                <th colspan="2">歯茎</th>
+                <th colspan="2">後部歯茎</th>
+                <th colspan="2">そり舌</th>
+                <th colspan="2">歯茎硬口蓋</th>
+                <th colspan="2">硬口蓋</th>
+                <th colspan="2">軟口蓋</th>
+                <th colspan="2">口蓋垂</th>
+                <th colspan="2">咽頭・喉頭蓋</th>
+                <th colspan="2">声門</th>
+              </tr>
+              <tr class="header-row">
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+                <th class="col-header-voiceless">無</th><th class="col-header-voiced">有</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 鼻音 -->
+              <tr>
+                <td class="row-header">鼻音</td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="m̥">m̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="m">m</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɱ">ɱ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="n̼̊">n̼̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="n̼">n̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="n̥">n̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="n">n</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɳ̊">ɳ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɳ">ɳ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɲ̊">ɲ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɲ">ɲ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ŋ̊">ŋ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ŋ">ŋ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɴ̥">ɴ̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɴ">ɴ</button></td>
+                <td colspan="4" class="cell-empty"></td>
+              </tr>
+              <!-- 破裂音 -->
+              <tr>
+                <td class="row-header">破裂音</td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="p">p</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="b">b</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="p̪">p̪</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="b̪">b̪</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t̼">t̼</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d̼">d̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t">t</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d">d</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʈ">ʈ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɖ">ɖ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="c">c</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɟ">ɟ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="k">k</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɡ">ɡ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="q">q</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɢ">ɢ</button></td>
+                <td colspan="2"><button type="button" class="ipa-btn" data-ipa="ʡ">ʡ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʔ">ʔ</button></td>
+                <td class="td-voiced cell-empty"></td>
+              </tr>
+              <!-- 破擦音（歯擦音） -->
+              <tr>
+                <td class="row-header">破擦 (歯擦)</td>
+                <td colspan="6" class="cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡s">t͡s</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡z">d͡z</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡ʃ">t͡ʃ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡ʒ">d͡ʒ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʈ͡ʂ">ʈ͡ʂ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɖ͡ʐ">ɖ͡ʐ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡ɕ">t͡ɕ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡ʑ">d͡ʑ</button></td>
+                <td colspan="10" class="cell-empty"></td>
+              </tr>
+              <!-- 破擦音（非歯擦音） -->
+              <tr>
+                <td class="row-header">破擦 (非歯擦)</td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="p͡ɸ">p͡ɸ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="b͡β">b͡β</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="p̪͡f">p̪͡f</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="b̪͡v">b̪͡v</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡θ">t͡θ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡ð">d͡ð</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡θ̠">t͡θ̠</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡ð̠">d͡ð̠</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t̠͡ɹ̠̊˔">t̠͡ɹ̠̊˔</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d̠͡ɹ̠˔">d̠͡ɹ̠˔</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="c͡ç">c͡ç</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɟ͡ʝ">ɟ͡ʝ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="k͡x">k͡x</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɡ͡ɣ">ɡ͡ɣ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="q͡χ">q͡χ</button></td>
+                <td class="td-voiced cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʡ͡ħ">ʡ͡ħ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʡ͡ʕ">ʡ͡ʕ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʔ͡h">ʔ͡h</button></td>
+                <td class="td-voiced cell-empty"></td>
+              </tr>
+              <!-- 摩擦音（歯擦音） -->
+              <tr>
+                <td class="row-header">摩擦 (歯擦)</td>
+                <td colspan="6" class="cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="s">s</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="z">z</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʃ">ʃ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʒ">ʒ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʂ">ʂ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʐ">ʐ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɕ">ɕ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʑ">ʑ</button></td>
+                <td colspan="10" class="cell-empty"></td>
+              </tr>
+              <!-- 摩擦音（非歯擦音） -->
+              <tr>
+                <td class="row-header">摩擦 (非歯擦)</td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɸ">ɸ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="β">β</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="f">f</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="v">v</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="θ̼">θ̼</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ð̼">ð̼</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="θ">θ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ð">ð</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="θ̱">θ̱</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ð̠">ð̠</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɹ̠̊˔">ɹ̠̊˔</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɹ̠˔">ɹ̠˔</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ç">ç</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʝ">ʝ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="x">x</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɣ">ɣ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="χ">χ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʁ">ʁ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ħ">ħ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʕ">ʕ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="h">h</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɦ">ɦ</button></td>
+              </tr>
+              <!-- 接近音 -->
+              <tr>
+                <td class="row-header">接近音</td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɸ˕">ɸ˕</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="β̞">β̞</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʋ">ʋ</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="θ̞">θ̞</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɹ̥">ɹ̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɹ">ɹ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɻ̊">ɻ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɻ">ɻ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="j̊">j̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="j">j</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɰ̊">ɰ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɰ">ɰ</button></td>
+                <td colspan="6" class="cell-empty"></td>
+              </tr>
+              <!-- はじき音 -->
+              <tr>
+                <td class="row-header">はじき音</td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ⱱ̟">ⱱ̟</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ⱱ">ⱱ</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɾ̼">ɾ̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɾ̥">ɾ̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɾ">ɾ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɽ̊">ɽ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɽ">ɽ</button></td>
+                <td colspan="4" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɢ̆">ɢ̆</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʡ̯">ʡ̯</button></td>
+                <td colspan="2" class="cell-empty"></td>
+              </tr>
+              <!-- ふるえ音 -->
+              <tr>
+                <td class="row-header">ふるえ音</td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʙ">ʙ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="r̼">r̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="r̥">r̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="r">r</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɽ͡r̥">ɽ͡r̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɽ͡r">ɽ͡r</button></td>
+                <td colspan="4" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʀ̥">ʀ̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʀ">ʀ</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʜ">ʜ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʢ">ʢ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+              </tr>
+              <!-- 側面破擦音 -->
+              <tr>
+                <td class="row-header">側面破擦音</td>
+                <td colspan="8" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="t͡ɬ">t͡ɬ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="d͡ɮ">d͡ɮ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʈ͡ɭ̊˔">ʈ͡ɭ̊˔</button></td>
+                <td class="td-voiced cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="c͡ʎ̥˔">c͡ʎ̥˔</button></td>
+                <td class="td-voiced cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="k͡ʟ̝̊">k͡ʟ̝̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɡ͡ʟ̝">ɡ͡ʟ̝</button></td>
+                <td colspan="6" class="cell-empty"></td>
+              </tr>
+              <!-- 側面摩擦音 -->
+              <tr>
+                <td class="row-header">側面摩擦音</td>
+                <td colspan="8" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɬ">ɬ</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɮ">ɮ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɭ̊˔">ɭ̊˔</button></td>
+                <td class="td-voiced cell-empty"></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʎ̥˔">ʎ̥˔</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʎ̝">ʎ̝</button></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʟ̝̊">ʟ̝̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʟ̝">ʟ̝</button></td>
+                <td colspan="6" class="cell-empty"></td>
+              </tr>
+              <!-- 側面接近音 -->
+              <tr>
+                <td class="row-header">側面接近音</td>
+                <td colspan="4" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="l̼">l̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="l̥">l̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="l">l</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ɭ̊">ɭ̊</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɭ">ɭ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless"><button type="button" class="ipa-btn" data-ipa="ʎ̥">ʎ̥</button></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʎ">ʎ</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʟ">ʟ</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʟ̠">ʟ̠</button></td>
+                <td colspan="4" class="cell-empty"></td>
+              </tr>
+              <!-- 側面はじき音 -->
+              <tr>
+                <td class="row-header">側面はじき音</td>
+                <td colspan="4" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɺ̼">ɺ̼</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɺ">ɺ</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ɭ̆">ɭ̆</button></td>
+                <td colspan="2" class="cell-empty"></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʎ̯">ʎ̯</button></td>
+                <td class="td-voiceless cell-empty"></td>
+                <td class="td-voiced"><button type="button" class="ipa-btn" data-ipa="ʟ̆">ʟ̆</button></td>
+                <td colspan="6" class="cell-empty"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Tier 2: 非肺臓気流・二重調音 (左 56%) ＋ 母音 (右 44%) -->
+    <div class="layout-tier-2">
+
+      <div class="col-tier2-left">
+
+        <!-- 非肺臓気流子音 (NON-PULMONIC CONSONANTS) -->
+        <section id="sec-non-pulmonic" class="swiss-section">
+          <div class="swiss-section-header">
+            <span>非肺臓気流子音 (NON-PULMONIC CONSONANTS)</span>
+            <span class="sub">吸着音 • 入破音 • 放出音</span>
+          </div>
+          <div class="table-responsive">
+            <table class="swiss-table">
+              <thead>
+                <!-- 吸着音 (CLICKS) -->
+                <tr>
+                  <th colspan="7" class="category-header">吸着音 (CLICKS)</th>
+                </tr>
+                <tr class="header-row">
+                  <th class="origin-cell" style="width: 86px;">調音法 \ 位置</th>
+                  <th>両唇</th>
+                  <th>歯</th>
+                  <th>歯茎</th>
+                  <th>硬口蓋歯茎</th>
+                  <th>歯茎側面</th>
+                  <th>そり舌</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-header">無声音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ" title="無声両唇吸着音">ʘ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǀ" title="無声歯吸着音">ǀ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ" title="無声歯茎吸着音">ǃ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǂ" title="無声硬口蓋歯茎吸着音">ǂ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǁ" title="無声歯茎側面吸着音">ǁ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ˞" title="無声そり舌吸着音">ǃ˞</button></td>
+                </tr>
+                <tr>
+                  <td class="row-header">有声音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ̬" title="有声両唇吸着音">ʘ̬</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǀ̬" title="有声歯吸着音">ǀ̬</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ̬" title="有声歯茎吸着音">ǃ̬</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǂ̬" title="有声硬口蓋歯茎吸着音">ǂ̬</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǁ̬" title="有声歯茎側面吸着音">ǁ̬</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ̬˞" title="有声そり舌吸着音">ǃ̬˞</button></td>
+                </tr>
+                <tr>
+                  <td class="row-header">鼻音化</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ̃" title="鼻音化両唇吸着音">ʘ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǀ̃" title="鼻音化歯吸着音">ǀ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ̃" title="鼻音化歯茎吸着音">ǃ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǂ̃" title="鼻音化硬口蓋歯茎吸着音">ǂ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǁ̃" title="鼻音化歯茎側面吸着音">ǁ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ǃ̃˞" title="鼻音化そり舌吸着音">ǃ̃˞</button></td>
+                </tr>
+                <tr>
+                  <td class="row-header">声門化・派生</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ̃ˀ" title="声門化鼻音化両唇吸着音">ʘ̃ˀ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘˀ" title="声門化両唇吸着音">ʘˀ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ˀʘ̃" title="前声門化両唇吸着鼻音">ˀʘ̃</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="¡" title="亜歯茎吸着音">¡</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʞ" title="軟口蓋吸着音">ʞ</button></td>
+                  <td class="cell-empty"></td>
+                </tr>
+                <tr>
+                  <td class="row-header">口蓋垂破擦・放出</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ͡q" title="無声両唇口蓋垂破擦吸着音">ʘ͡q</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ͡qχ" title="両唇口蓋垂破擦吸着音">ʘ͡qχ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ͡qʼ" title="両唇口蓋垂放出吸着音">ʘ͡qʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʘ͡qχʼ" title="両唇口蓋垂破擦放出吸着音">ʘ͡qχʼ</button></td>
+                  <td colspan="2" class="cell-empty"></td>
+                </tr>
+
+                <!-- 入破音 (IMPLOSIVES) -->
+                <tr>
+                  <th colspan="7" class="category-header">入破音 (IMPLOSIVES)</th>
+                </tr>
+                <tr class="header-row">
+                  <th class="origin-cell" style="width: 86px;">調音法 \ 位置</th>
+                  <th>両唇</th>
+                  <th>歯・歯茎</th>
+                  <th>そり舌</th>
+                  <th>硬口蓋</th>
+                  <th>軟口蓋</th>
+                  <th>口蓋垂</th>
+                </tr>
+                <tr>
+                  <td class="row-header">有声音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɓ" title="有声両唇入破音">ɓ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɗ" title="有声歯茎入破音">ɗ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ᶑ" title="有声そり舌入破音">ᶑ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʄ" title="有声硬口蓋入破音">ʄ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɠ" title="有声軟口蓋入破音">ɠ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʛ" title="有声口蓋垂入破音">ʛ</button></td>
+                </tr>
+                <tr>
+                  <td class="row-header">無声音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɓ̥" title="無声両唇入破音">ɓ̥</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɗ̥" title="無声歯茎入破音">ɗ̥</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ᶑ̥" title="無声そり舌入破音">ᶑ̥</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʄ̊" title="無声硬口蓋入破音">ʄ̊</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɠ̊" title="無声軟口蓋入破音">ɠ̊</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʛ̥" title="無声口蓋垂入破音">ʛ̥</button></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- 放出音 (EJECTIVES) -->
+            <table class="swiss-table" style="margin-top: -1px;">
+              <thead>
+                <tr>
+                  <th colspan="15" class="category-header">放出音 (EJECTIVES)</th>
+                </tr>
+                <tr class="header-row">
+                  <th class="origin-cell" style="width: 86px;">調音法 \ 位置</th>
+                  <th>両唇</th>
+                  <th>唇歯</th>
+                  <th>歯</th>
+                  <th>歯茎</th>
+                  <th>歯茎側面</th>
+                  <th>後部歯茎</th>
+                  <th>そり舌</th>
+                  <th>歯茎硬口蓋</th>
+                  <th>硬口蓋</th>
+                  <th>硬口蓋側面</th>
+                  <th>軟口蓋</th>
+                  <th>軟口蓋側面</th>
+                  <th>口蓋垂</th>
+                  <th>喉頭蓋</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-header">破裂放出</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="pʼ" title="無声両唇放出音">pʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="tʼ" title="無声歯茎放出音">tʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʈʼ" title="無声そり舌放出音">ʈʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="cʼ" title="無声硬口蓋放出音">cʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="kʼ" title="無声軟口蓋放出音">kʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="qʼ" title="無声口蓋垂放出音">qʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʡʼ" title="喉頭蓋放出音">ʡʼ</button></td>
+                </tr>
+                <tr>
+                  <td class="row-header">摩擦放出</td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="fʼ" title="無声唇歯摩擦放出音">fʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="θʼ" title="無声歯摩擦放出音">θʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="sʼ" title="無声歯茎摩擦放出音">sʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɬʼ" title="無声歯茎側面摩擦放出音">ɬʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʃʼ" title="無声後部歯茎摩擦放出音">ʃʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʂʼ" title="無声そり舌摩擦放出音">ʂʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɕʼ" title="無声歯茎硬口蓋摩擦放出音">ɕʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="xʼ" title="無声軟口蓋摩擦放出音">xʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="χʼ" title="無声口蓋垂摩擦放出音">χʼ</button></td>
+                  <td class="cell-empty"></td>
+                </tr>
+                <tr>
+                  <td class="row-header">破擦放出</td>
+                  <td class="cell-empty"></td>
+                  <td class="cell-empty"></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="t͡sʼ" title="無声歯茎破擦放出音">t͡sʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="t͡ɬʼ" title="無声歯茎側面破擦放出音">t͡ɬʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="t͡ʃʼ" title="無声後部歯茎破擦放出音">t͡ʃʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʈ͡ʂʼ" title="無声そり舌破擦放出音">ʈ͡ʂʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="t͡ɕʼ" title="無声歯茎硬口蓋破擦放出音">t͡ɕʼ</button></td>
+                  <td class="cell-empty"></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="c͡ʎ̝̥ʼ" title="無声硬口蓋側面破擦放出音">c͡ʎ̝̥ʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="k͡xʼ" title="無声軟口蓋破擦放出音">k͡xʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="k͡ʟ̝̊ʼ" title="無声軟口蓋側面破擦放出音">k͡ʟ̝̊ʼ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="q͡χʼ" title="無声口蓋垂破擦放出音">q͡χʼ</button></td>
+                  <td class="cell-empty"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 二重調音 (DOUBLE ARTICULATION) - 1セル1記号設計 -->
+        <section class="swiss-section">
+          <div class="swiss-section-header">
+            <span>二重調音 (DOUBLE ARTICULATION)</span>
+            <span class="sub">接近音 • 破裂音 • 鼻音</span>
+          </div>
+          <div class="table-responsive">
+            <table class="swiss-table">
+              <thead>
+                <tr>
+                  <th colspan="8" class="category-header">継続音・接近音 (CONTINUANTS & APPROXIMANTS)</th>
+                </tr>
+                <tr class="header-row">
+                  <th class="origin-cell" style="width: 86px;">調音法 \ 位置</th>
+                  <th>無声両唇軟口蓋</th>
+                  <th>有声両唇軟口蓋</th>
+                  <th>両唇硬口蓋</th>
+                  <th>軟口蓋化歯茎</th>
+                  <th>後部歯茎軟口蓋</th>
+                  <th colspan="2" class="cell-empty"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-header">接近・摩擦音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ʍ" title="無声両唇軟口蓋接近音">ʍ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="w" title="有声両唇軟口蓋接近音">w</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɥ" title="有声両唇硬口蓋接近音">ɥ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɫ" title="軟口蓋化歯茎側面接近音">ɫ</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɧ" title="無声後部歯茎軟口蓋摩擦音">ɧ</button></td>
+                  <td colspan="2" class="cell-empty"></td>
+                </tr>
+                <tr>
+                  <th colspan="8" class="category-header">閉鎖音・破裂音・鼻音 (STOPS & NASALS)</th>
+                </tr>
+                <tr class="header-row">
+                  <th class="origin-cell">調音法 \ 位置</th>
+                  <th>両唇軟口蓋(無)</th>
+                  <th>両唇軟口蓋(有)</th>
+                  <th>両唇軟口蓋(鼻)</th>
+                  <th>両唇歯茎(無)</th>
+                  <th>両唇歯茎(有)</th>
+                  <th>両唇歯茎(鼻)</th>
+                  <th>口蓋垂喉頭蓋</th>
+                </tr>
+                <tr>
+                  <td class="row-header">破裂・鼻音</td>
+                  <td><button type="button" class="ipa-btn" data-ipa="k͡p" title="無声両唇軟口蓋破裂音">k͡p</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ɡ͡b" title="有声両唇軟口蓋破裂音">ɡ͡b</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="ŋ͡m" title="両唇軟口蓋鼻音">ŋ͡m</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="t͡p" title="無声両唇歯茎破裂音">t͡p</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="d͡b" title="有声両唇歯茎破裂音">d͡b</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="n͡m" title="両唇歯茎鼻音">n͡m</button></td>
+                  <td><button type="button" class="ipa-btn" data-ipa="q͡ʡ" title="口蓋垂喉頭蓋破裂音">q͡ʡ</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 右側: 母音 (VOWELS) -->
+      <div class="col-tier2-right">
+        <section id="sec-vowels" class="swiss-section">
+        <div class="swiss-section-header">
+          <span>母音 (VOWELS)</span>
+          <span class="sub">前舌 • 中舌 • 後舌</span>
+        </div>
+        <div class="vowel-board">
+          <div class="vowel-diagram-wrap">
+            <div class="vowel-y-axis">
+              <span>狭 (Close)</span>
+              <span>広めの狭</span>
+              <span>半狭 (Close-mid)</span>
+              <span>中央 (Mid)</span>
+              <span>半広 (Open-mid)</span>
+              <span>狭めの広</span>
+              <span>広 (Open)</span>
+            </div>
+            <div class="vowel-stage">
+              <!-- 精密SVG母音台形フレーム -->
+              <svg viewBox="0 0 270 176">
+                <!-- 外枠台形: 左上(18,10), 右上(252,10), 右下(252,166), 左下(102,166) -->
+                <polygon points="18,10 252,10 252,166 102,166" fill="none" stroke="#000000" stroke-width="1.5" />
+                <!-- 中舌傾斜線 -->
+                <line x1="135" y1="10" x2="177" y2="166" stroke="#71717a" stroke-width="1" stroke-dasharray="3,3" />
+                <!-- 半狭レベル線 (y=62) -->
+                <line x1="39" y1="62" x2="252" y2="62" stroke="#d4d4d8" stroke-width="1" />
+                <!-- 半広レベル線 (y=114) -->
+                <line x1="60" y1="114" x2="252" y2="114" stroke="#d4d4d8" stroke-width="1" />
+              </svg>
+
+              <!-- 狭 (Close, y=10) -->
+              <div class="vowel-pair" style="top: 10px; left: 18px;">
+                <button type="button" class="ipa-btn" data-ipa="i">i</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="y">y</button>
+              </div>
+              <div class="vowel-pair" style="top: 10px; left: 135px;">
+                <button type="button" class="ipa-btn" data-ipa="ɨ">ɨ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ʉ">ʉ</button>
+              </div>
+              <div class="vowel-pair" style="top: 10px; left: 252px;">
+                <button type="button" class="ipa-btn" data-ipa="ɯ">ɯ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="u">u</button>
+              </div>
+
+              <!-- 広めの狭 (Near-close, y=36) -->
+              <div class="vowel-pair" style="top: 36px; left: 74px;">
+                <button type="button" class="ipa-btn" data-ipa="ɪ">ɪ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ʏ">ʏ</button>
+              </div>
+              <div class="vowel-pair" style="top: 36px; left: 142px;">
+                <button type="button" class="ipa-btn" data-ipa="ɪ̈">ɪ̈</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ʊ̈">ʊ̈</button>
+              </div>
+              <div class="vowel-pair" style="top: 36px; left: 216px;">
+                <button type="button" class="ipa-btn" data-ipa="ʊ">ʊ</button>
+              </div>
+
+              <!-- 半狭 (Close-mid, y=62) -->
+              <div class="vowel-pair" style="top: 62px; left: 39px;">
+                <button type="button" class="ipa-btn" data-ipa="e">e</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ø">ø</button>
+              </div>
+              <div class="vowel-pair" style="top: 62px; left: 148px;">
+                <button type="button" class="ipa-btn" data-ipa="ɘ">ɘ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɵ">ɵ</button>
+              </div>
+              <div class="vowel-pair" style="top: 62px; left: 252px;">
+                <button type="button" class="ipa-btn" data-ipa="ɤ">ɤ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="o">o</button>
+              </div>
+
+              <!-- 中央 (Mid, y=88) -->
+              <div class="vowel-pair" style="top: 88px; left: 50px;">
+                <button type="button" class="ipa-btn" data-ipa="e̞">e̞</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ø̞">ø̞</button>
+              </div>
+              <div class="vowel-pair" style="top: 88px; left: 156px;">
+                <button type="button" class="ipa-btn" data-ipa="ə">ə</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɵ̞">ɵ̞</button>
+              </div>
+              <div class="vowel-pair" style="top: 88px; left: 252px;">
+                <button type="button" class="ipa-btn" data-ipa="ɤ̞">ɤ̞</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="o̞">o̞</button>
+              </div>
+
+              <!-- 半広 (Open-mid, y=114) -->
+              <div class="vowel-pair" style="top: 114px; left: 60px;">
+                <button type="button" class="ipa-btn" data-ipa="ɛ">ɛ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="œ">œ</button>
+              </div>
+              <div class="vowel-pair" style="top: 114px; left: 163px;">
+                <button type="button" class="ipa-btn" data-ipa="ɜ">ɜ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɞ">ɞ</button>
+              </div>
+              <div class="vowel-pair" style="top: 114px; left: 252px;">
+                <button type="button" class="ipa-btn" data-ipa="ʌ">ʌ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɔ">ɔ</button>
+              </div>
+
+              <!-- 狭めの広 (Near-open, y=140) -->
+              <div class="vowel-pair" style="top: 140px; left: 86px;">
+                <button type="button" class="ipa-btn" data-ipa="æ">æ</button>
+              </div>
+              <div class="vowel-pair" style="top: 140px; left: 170px;">
+                <button type="button" class="ipa-btn" data-ipa="ɐ">ɐ</button>
+              </div>
+
+              <!-- 広 (Open, y=166) -->
+              <div class="vowel-pair" style="top: 166px; left: 102px;">
+                <button type="button" class="ipa-btn" data-ipa="a">a</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɶ">ɶ</button>
+              </div>
+              <div class="vowel-pair" style="top: 166px; left: 177px;">
+                <button type="button" class="ipa-btn" data-ipa="ä">ä</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɒ̈">ɒ̈</button>
+              </div>
+              <div class="vowel-pair" style="top: 166px; left: 252px;">
+                <button type="button" class="ipa-btn" data-ipa="ɑ">ɑ</button><span class="v-dot">•</span><button type="button" class="ipa-btn" data-ipa="ɒ">ɒ</button>
+              </div>
+            </div>
+          </div>
+          <div class="vowel-x-axis">
+            <span>前舌 (Front)</span>
+            <span>中舌 (Central)</span>
+            <span>後舌 (Back)</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- Tier 3: 補助記号 (左 50%) ＋ 超分節要素 & 声調 (右 50%) -->
+  <div class="layout-tier-3">
+
+    <div class="col-tier3-left">
+      <!-- 補助記号 (DIACRITICS) - 体系的カテゴリー分類 -->
+      <section id="sec-diacritics" class="swiss-section">
+        <div class="swiss-section-header">
+          <span>補助記号 (DIACRITICS)</span>
+          <span class="sub">音節性 • 解放 • 発声 • 調音 • 気流</span>
+        </div>
+        <div class="table-responsive">
+          <table class="swiss-table-list">
+            <thead>
+              <tr class="header-row">
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.33%;">記号</th>
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.33%;">記号</th>
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.34%;">記号</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 1. 音節性 & 子音解放 -->
+              <tr>
+                <th colspan="6" class="category-header">音節性 & 子音解放 (SYLLABICITY & RELEASE)</th>
+              </tr>
+              <tr>
+                <td class="row-header">音節主音</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̩" title="音節主音（下符）">◌̩</button></td>
+                <td class="row-header">帯気音</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ʰ" title="帯気音">◌ʰ</button></td>
+                <td class="row-header">鼻腔開放</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ⁿ" title="鼻腔開放">◌ⁿ</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">音節副音</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̯" title="音節副音（下符）">◌̯</button></td>
+                <td class="row-header">無開放・内破</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̚" title="内破音（無開放）">◌̚</button></td>
+                <td class="row-header">側面開放</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ˡ" title="側面開放">◌ˡ</button></td>
+              </tr>
+
+              <!-- 2. 発声・声門状態 -->
+              <tr>
+                <th colspan="6" class="category-header">発声・声門状態 (PHONATION)</th>
+              </tr>
+              <tr>
+                <td class="row-header">無声化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̥" title="無声化">◌̥</button></td>
+                <td class="row-header">有声化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̬" title="有声化">◌̬</button></td>
+                <td class="row-header">息漏れ声</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̤" title="息漏れ声">◌̤</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">軋み声</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̰" title="軋み声">◌̰</button></td>
+                <td colspan="4" class="cell-empty"></td>
+              </tr>
+
+              <!-- 3. 調音位置・舌の位置 -->
+              <tr>
+                <th colspan="6" class="category-header">調音位置・舌の位置 (PRIMARY ARTICULATION)</th>
+              </tr>
+              <tr>
+                <td class="row-header">歯音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̪" title="歯音化">◌̪</button></td>
+                <td class="row-header">舌唇音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̼" title="舌唇音化">◌̼</button></td>
+                <td class="row-header">舌尖音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̺" title="舌尖音化">◌̺</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">舌端音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̻" title="舌端音化">◌̻</button></td>
+                <td class="row-header">前寄り</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̟" title="前寄り">◌̟</button></td>
+                <td class="row-header">後寄り</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̠" title="後寄り">◌̠</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">中舌寄り</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̈" title="中舌寄り">◌̈</button></td>
+                <td class="row-header">中央寄り</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̽" title="中央寄り">◌̽</button></td>
+                <td class="row-header">上寄り</td>
+                <td class="cell-multi-btn"><button type="button" class="ipa-btn mark-btn" data-ipa="̝" title="上寄り下符">◌̝</button><button type="button" class="ipa-btn" data-ipa="˔" title="上寄り独立符">◌˔</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">下寄り</td>
+                <td class="cell-multi-btn"><button type="button" class="ipa-btn mark-btn" data-ipa="̞" title="下寄り下符">◌̞</button><button type="button" class="ipa-btn" data-ipa="˕" title="下寄り独立符">◌˕</button></td>
+                <td class="row-header">摩擦接近</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ɹ̝" title="摩擦音化接近音">ɹ̝</button></td>
+                <td colspan="2" class="cell-empty"></td>
+              </tr>
+
+              <!-- 4. 同時調音・二次調音 & 気流機構 -->
+              <tr>
+                <th colspan="6" class="category-header">同時調音・二次調音 & 気流 (CO-ARTICULATION & AIRSTREAM)</th>
+              </tr>
+              <tr>
+                <td class="row-header">鼻音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̃" title="鼻音化">◌̃</button></td>
+                <td class="row-header">唇音化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ʷ" title="唇音化">◌ʷ</button></td>
+                <td class="row-header">舌根前進</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̘" title="舌根前進（+ATR）">◌̘</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">硬口蓋化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ʲ" title="硬口蓋化">◌ʲ</button></td>
+                <td class="row-header">軟口蓋化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ˠ" title="軟口蓋化">◌ˠ</button></td>
+                <td class="row-header">舌根後退</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̙" title="舌根後退（-ATR）">◌̙</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">咽頭化</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ˤ" title="咽頭化">◌ˤ</button></td>
+                <td class="row-header">両唇硬口蓋</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="ᶣ" title="両唇硬口蓋化">◌ᶣ</button></td>
+                <td class="row-header">咽頭・軟口蓋</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̴" title="軟口蓋化または咽頭化">◌̴</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">強円唇</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̹" title="強めの円唇">◌̹</button></td>
+                <td class="row-header">弱円唇</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̜" title="弱めの円唇">◌̜</button></td>
+                <td class="row-header">R音性</td>
+                <td class="cell-multi-btn"><button type="button" class="ipa-btn mark-btn" data-ipa="˞" title="R音性">◌˞</button><button type="button" class="ipa-btn" data-ipa="ɚ" title="R音性シュワー">ɚ</button><button type="button" class="ipa-btn" data-ipa="ɝ" title="R音性母音">ɝ</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-tier3-right">
+      <!-- 超分節要素 & 声調 (SUPRASEGMENTALS & TONES) - 合字対応 -->
+      <section id="sec-suprasegmentals" class="swiss-section">
+        <div class="swiss-section-header">
+          <span>超分節要素 & 声調 (SUPRASEGMENTALS & TONES)</span>
+          <span class="sub">強勢 • 長短 • 境界 • 水平調 • 曲線調</span>
+        </div>
+        <div class="table-responsive">
+          <!-- 超分節要素 (SUPRASEGMENTALS) -->
+          <table class="swiss-table-list">
+            <thead>
+              <tr>
+                <th colspan="6" class="category-header">超分節要素 (SUPRASEGMENTALS)</th>
+              </tr>
+              <tr class="header-row">
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.33%;">記号</th>
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.33%;">記号</th>
+                <th style="width: 21%;">区分</th>
+                <th style="width: 12.34%;">記号</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-header">強勢</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ˈ" title="第一強勢">ˈ</button></td>
+                <td class="row-header">副強勢</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ˌ" title="第二強勢">ˌ</button></td>
+                <td class="row-header">音節境界</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="." title="音節境界">.</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">長音</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ː" title="長音">ː</button></td>
+                <td class="row-header">半長音</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ˑ" title="半長音">ˑ</button></td>
+                <td class="row-header">超短音</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̆" title="超短音">◌̆</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">二重調音バー</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="͡" title="上連結タイバー">◌͡◌</button></td>
+                <td class="row-header">連結 (Linking)</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="‿" title="下連結タイバー">◌‿◌</button></td>
+                <td class="row-header">区切り (Pause)</td>
+                <td class="cell-multi-btn"><button type="button" class="ipa-btn" data-ipa="|" title="小さな切れ目（韻脚境界）">|</button><button type="button" class="ipa-btn" data-ipa="‖" title="大きな切れ目（イントネーション句）">‖</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 五段階声調 (LEVEL TONES) -->
+          <table class="swiss-table" style="margin-top: -1px;">
+            <thead>
+              <tr>
+                <th colspan="6" class="category-header">五段階声調 (LEVEL TONES)</th>
+              </tr>
+              <tr class="header-row">
+                <th class="origin-cell" style="width: 86px;">表記 \ 音高</th>
+                <th>超高 (55)</th>
+                <th>高 (44)</th>
+                <th>中 (33)</th>
+                <th>低 (22)</th>
+                <th>超低 (11)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-header">アクセント符</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̋">◌̋</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="́">◌́</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̄">◌̄</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̀">◌̀</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̏">◌̏</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">声調バー (合字)</td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˥" title="超高声調バー (55)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="3" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˦" title="高声調バー (44)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˧" title="中声調バー (33)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="11" x2="12" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˨" title="低声調バー (22)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˩" title="超低声調バー (11)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="19" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 曲線声調 (CONTOUR TONES) -->
+          <table class="swiss-table" style="margin-top: -1px;">
+            <thead>
+              <tr>
+                <th colspan="6" class="category-header">曲線声調 (CONTOUR TONES)</th>
+              </tr>
+              <tr class="header-row">
+                <th class="origin-cell" style="width: 86px;">表記 \ 曲線</th>
+                <th>高下降 (54)</th>
+                <th>下降 (51)</th>
+                <th>高半下降 (53)</th>
+                <th>上昇 (15)</th>
+                <th>高上昇 (35)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-header">アクセント符</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="᷇">◌᷇</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̂">◌̂</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="᷇">◌᷇</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̌">◌̌</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="᷄">◌᷄</button></td>
+              </tr>
+              <tr>
+                <td class="row-header">合字トーンバー</td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˥˦" title="高下降調合字バー (54)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="3" x2="12" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˥˩" title="下降調合字バー (51)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="3" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˥˧" title="高下降調合字バー (53)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="3" x2="12" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˩˥" title="上昇調合字バー (15)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="19" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˧˥" title="高上昇調合字バー (35)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="11" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+              </tr>
+              <tr class="header-row">
+                <th class="origin-cell">表記 \ 複合</th>
+                <th>昇降 (454)</th>
+                <th>降昇 (214)</th>
+                <th>低上昇 (13)</th>
+                <th>低下降 (31)</th>
+                <th class="cell-empty"></th>
+              </tr>
+              <tr>
+                <td class="row-header">アクセント符</td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="᷈">◌᷈</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̌">◌̌</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="᷄">◌᷄</button></td>
+                <td><button type="button" class="ipa-btn mark-btn" data-ipa="̀">◌̀</button></td>
+                <td class="cell-empty"></td>
+              </tr>
+              <tr>
+                <td class="row-header">追加合字バー</td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˦˥˦" title="昇降調合字バー (454)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><polyline points="4,7 8,3 12,7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˨˩˦" title="降昇調合字バー (214)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><polyline points="4,15 8,19 12,7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˩˧" title="低上昇調合字バー (13)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="19" x2="12" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td><button type="button" class="ipa-btn tone-btn" data-ipa="˧˩" title="低下降調合字バー (31)"><svg class="tone-icon" viewBox="0 0 15 22"><line x1="12" y1="2" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="11" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+                <td class="cell-empty"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- イントネーション (INTONATION) -->
+          <table class="swiss-table" style="margin-top: -1px;">
+            <thead>
+              <tr>
+                <th colspan="6" class="category-header">イントネーション (INTONATION)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-header" style="width: 86px;">ピッチステップ</td>
+                <td><button type="button" class="ipa-btn" data-ipa="ꜜ" title="ダウンステップ">ꜜ</button></td>
+                <td style="border-right: 2px solid var(--border-strong) !important;"><button type="button" class="ipa-btn" data-ipa="ꜛ" title="アップステップ">ꜛ</button></td>
+                <td class="row-header" style="width: 86px;">グローバル調</td>
+                <td><button type="button" class="ipa-btn" data-ipa="↗" title="全体的上昇">↗</button></td>
+                <td><button type="button" class="ipa-btn" data-ipa="↘" title="全体的下降">↘</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </div> <!-- /layout-tier-3 -->
+
+  </main>
+
+</div>
+
+<!-- ホバー時スマートツールチップ -->
+<div id="smart-tooltip"></div>
+
+<!-- コピートースト -->
+<div id="toast"><span id="toast-msg">COPIED TO CLIPBOARD</span></div>
+
+<!-- 「？」コマンド・操作説明モーダル -->
+<div id="help-modal" class="modal-backdrop">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-header">
+      <h2 id="help-title" class="modal-title">操作説明 (OPERATING INSTRUCTIONS)</h2>
+      <button type="button" id="help-close-btn" class="modal-close" aria-label="閉じる">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>ショートカット (SHORTCUTS)</h3>
+      <ul>
+        <li><kbd>?</kbd> または <kbd>Shift</kbd> + <kbd>/</kbd> : 操作説明画面を開閉します。</li>
+        <li><kbd>Esc</kbd> : 操作説明画面を閉じます。</li>
+      </ul>
+
+      <h3>入力方法 (INPUT)</h3>
+      <ul>
+        <li><strong>字母の入力</strong>：盤面のボタンをクリックすると、入力欄のカーソル位置に文字が挿入されます。</li>
+        <li><strong>補助記号</strong>：修飾する文字の直後に入力すると結合されます。</li>
+        <li><strong>二重調音・連結</strong>：結ぶ2文字の間に入力します（◌͡◌ または ◌‿◌）。</li>
+        <li><strong>声調バー</strong>：連続する声調バーは合字（折れ線トーンバー）として連結表示されます。</li>
+        <li><strong>[ ] 精密表記 / / 音素表記</strong>：文字を選択した状態でボタンを押すと選択範囲が括弧で囲まれます。未選択時は入力欄全体を囲みます。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Editor / IDE Files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Node / Scratch / Temp
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+scratch/
+*.tmp
