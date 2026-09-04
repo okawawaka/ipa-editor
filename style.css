@@ -947,6 +947,27 @@ button.ipa-btn.tone-btn {
   border-radius: 0;
 }
 
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-main);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+  transition: color 0.15s ease;
+}
+
+.modal-link:hover {
+  color: var(--accent-red);
+}
+
+.modal-link-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
 /* ==========================================================
    レスポンシブデザイン（モバイル・タブレット）
    ========================================================== */
@@ -982,16 +1003,27 @@ button.ipa-btn.tone-btn {
     display: block;
   }
 
+  /* モバイル環境では全テーブル（補助記号・超分節要素含む）の横スクロールを許可 */
+  #sec-diacritics,
+  #sec-diacritics .table-responsive,
+  #sec-suprasegmentals,
+  #sec-suprasegmentals .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  .swiss-table {
-    min-width: 640px;
+  .swiss-table,
+  .swiss-table-list {
+    min-width: 600px;
   }
 
-  .swiss-table td, .swiss-table th {
+  .swiss-table td, .swiss-table th,
+  .swiss-table-list td, .swiss-table-list th {
     height: 32px;
   }
 
@@ -1000,3 +1032,4 @@ button.ipa-btn.tone-btn {
     font-size: 16px;
   }
 }
+
