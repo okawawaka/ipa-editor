@@ -12,8 +12,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
 
+  // UNDO履歴管理
+  const historyStack = [];
+  const maxHistory = 50;
+
+  function pushHistory() {
+    const state = {
+      val: textarea.value,
+      start: textarea.selectionStart,
+      end: textarea.selectionEnd
+    };
+    // 直前の状態と全く同じなら二重登録しない
+    if (historyStack.length > 0) {
+      const last = historyStack[historyStack.length - 1];
+      if (last.val === state.val && last.start === state.start && last.end === state.end) {
+        return;
+      }
+    }
+    historyStack.push(state);
+    if (historyStack.length > maxHistory) {
+      historyStack.shift();
+    }
+  }
+
+  function undo() {
+    if (historyStack.length === 0) {
+      showToast('NOTHING TO UNDO');
+      return;
+    }
+    const prevState = historyStack.pop();
+    textarea.value = prevState.val;
+    textarea.setSelectionRange(prevState.start, prevState.end);
+    textarea.focus();
+    updateCharCount();
+    showToast('UNDO');
+  }
+
   // テキスト挿入ユーティリティ
   function insertAtCursor(text) {
+    pushHistory();
     textarea.focus();
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -33,9 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentVal = textarea.value;
 
     if (start !== end) {
+      pushHistory();
       textarea.value = currentVal.substring(0, start) + currentVal.substring(end);
       textarea.setSelectionRange(start, start);
     } else if (start > 0) {
+      pushHistory();
       if (typeof Intl !== 'undefined' && Intl.Segmenter) {
         const segmenter = new Intl.Segmenter('und', { granularity: 'grapheme' });
         const beforeSegments = Array.from(segmenter.segment(currentVal.substring(0, start)));
@@ -55,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 囲み文字の追加 ([ ... ] または / ... /)
   function wrapSelection(openChar, closeChar) {
+    pushHistory();
     textarea.focus();
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -139,7 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('CLEARED');
     },
     'btn-copy': () => copyToClipboard(),
+    'btn-undo': () => undo(),
     'btn-sample': () => {
+      pushHistory();
       textarea.value = '/ɪntəˈnæʃənəl fəˈnɛtɪk ˈælfəbɛt/';
       updateCharCount();
       showToast('SAMPLE INSERTED');
@@ -226,6 +268,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // キーボードショートカット
   window.addEventListener('keydown', (e) => {
+    // Ctrl+Z または Cmd+Z による UNDO
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+      // モーダルが開いていない場合に実行
+      if (!helpModal.classList.contains('active')) {
+        e.preventDefault();
+        undo();
+        return;
+      }
+    }
+
     if (e.key === 'Escape') {
       if (helpModal.classList.contains('active')) {
         closeHelp();

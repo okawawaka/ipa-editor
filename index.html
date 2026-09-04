@@ -29,9 +29,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="data.js?v=2" defer></script>
-  <script src="app.js?v=2" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="data.js?v=3" defer></script>
+  <script src="app.js?v=3" defer></script>
 </head>
 <body>
 
@@ -57,6 +57,7 @@
       </div>
       <div class="action-grid">
         <button type="button" id="btn-copy" class="swiss-btn btn-black" title="クリップボードにコピー">COPY</button>
+        <button type="button" id="btn-undo" class="swiss-btn" title="直前の入力を元に戻す (Ctrl+Z)">UNDO</button>
         <button type="button" id="btn-space" class="swiss-btn">SPACE</button>
         <button type="button" id="btn-bracket" class="swiss-btn" title="精密表記 [ ] で囲む">[ &nbsp; ]</button>
         <button type="button" id="btn-slash" class="swiss-btn" title="音素表記 / / で囲む">/ &nbsp; /</button>
@@ -1107,6 +1108,7 @@
       <h3>ショートカット (SHORTCUTS)</h3>
       <ul>
         <li><kbd>?</kbd> または <kbd>Shift</kbd> + <kbd>/</kbd> : 操作説明画面を開閉します。</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> (Mac: <kbd>Cmd</kbd> + <kbd>Z</kbd>) : 直前の入力を元に戻します (UNDO)。</li>
         <li><kbd>Esc</kbd> : 操作説明画面を閉じます。</li>
       </ul>
 
