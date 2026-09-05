@@ -219,7 +219,7 @@ body {
   color: var(--text-main);
 }
 
-/* スイス・スタイル言語スイッチャー (JA | EN) */
+/* スイス・スタイル言語スイッチャー (JA / EN セグメントコントロール) */
 .lang-switch {
   display: inline-flex;
   align-items: center;
@@ -232,14 +232,14 @@ body {
 }
 
 .lang-btn {
-  background: transparent;
+  background: #ffffff;
   border: none;
   color: var(--text-muted);
   font-family: var(--font-ui);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  padding: 0 8px;
+  padding: 0 10px;
   height: 100%;
   cursor: pointer;
   display: inline-flex;
@@ -248,7 +248,11 @@ body {
   transition: background-color 0.1s, color 0.1s;
 }
 
-.lang-btn:hover {
+.lang-btn:first-child {
+  border-right: 1px solid var(--border-strong);
+}
+
+.lang-btn:hover:not(.active) {
   color: var(--text-main);
   background: var(--bg-subtle);
 }
@@ -257,15 +261,6 @@ body {
   background: var(--text-main);
   color: #ffffff;
   cursor: default;
-}
-
-.lang-sep {
-  color: var(--border-mid);
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 1;
-  padding: 0 1px;
-  user-select: none;
 }
 
 /* ホバーステータス情報バー */
