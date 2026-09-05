@@ -219,6 +219,55 @@ body {
   color: var(--text-main);
 }
 
+/* スイス・スタイル言語スイッチャー (JA | EN) */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0 8px;
+  height: 100%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.1s, color 0.1s;
+}
+
+.lang-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-subtle);
+}
+
+.lang-btn.active {
+  background: var(--text-main);
+  color: #ffffff;
+  cursor: default;
+}
+
+.lang-sep {
+  color: var(--border-mid);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0 1px;
+  user-select: none;
+}
+
 /* ホバーステータス情報バー */
 .status-ticker {
   display: flex;
@@ -1002,6 +1051,30 @@ button.ipa-btn.tone-btn {
 @media (max-width: 768px) {
   body {
     padding: 0 8px 30px;
+  }
+
+  .header-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .title-wrap {
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+  }
+
+  .app-title {
+    font-size: 14px;
+  }
+
+  .app-subtitle {
+    font-size: 10px;
+  }
+
+  .header-controls {
+    align-self: flex-end;
   }
 
   .mobile-tabs {

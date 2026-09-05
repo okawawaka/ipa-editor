@@ -1,4 +1,4 @@
-// 国際音声記号 (IPA) キーボード アプリケーションスクリプト (Swiss Style)
+﻿// 国際音声記号 (IPA) キーボード アプリケーションスクリプト (Swiss Style)
 
 document.addEventListener('DOMContentLoaded', () => {
   const textarea = document.getElementById('ipa-input');
@@ -12,7 +12,100 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
 
+  // 言語ボタン
+  const langJaBtn = document.getElementById('lang-ja');
+  const langEnBtn = document.getElementById('lang-en');
+
+  // ==========================================================
+  // 言語管理 (i18n) & 自動判定ロジック
+  // ==========================================================
+  let currentLang = 'ja';
+
+  function getInitialLanguage() {
+    // 1. ユーザーの手動選択が保存されていればそれを優先
+    const saved = localStorage.getItem('ipa_editor_lang');
+    if (saved === 'ja' || saved === 'en') {
+      return saved;
+    }
+    // 2. なければブラウザ言語を判定 (日本語以外なら自動的に英語 'en')
+    const navLang = (navigator.language || (navigator.languages && navigator.languages[0]) || '').toLowerCase();
+    if (navLang.startsWith('ja')) {
+      return 'ja';
+    }
+    return 'en';
+  }
+
+  function setLanguage(lang) {
+    if (!window.IPA_I18N || !window.IPA_I18N[lang]) return;
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    localStorage.setItem('ipa_editor_lang', lang);
+
+    const dict = window.IPA_I18N[lang];
+
+    // ページタイトル更新
+    if (dict.pageTitle) {
+      document.title = dict.pageTitle;
+    }
+
+    // data-i18n のテキスト更新
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) {
+        if (dict[key].includes('<') && dict[key].includes('>')) {
+          el.innerHTML = dict[key];
+        } else {
+          el.textContent = dict[key];
+        }
+      }
+    });
+
+    // data-i18n-title 属性の更新
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const key = el.getAttribute('data-i18n-title');
+      if (dict[key] !== undefined) {
+        el.setAttribute('title', dict[key]);
+      }
+    });
+
+    // data-i18n-placeholder 属性の更新
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key] !== undefined) {
+        el.setAttribute('placeholder', dict[key]);
+      }
+    });
+
+    // JA | EN トグルボタンのアクティブ表示
+    if (langJaBtn && langEnBtn) {
+      if (lang === 'ja') {
+        langJaBtn.classList.add('active');
+        langEnBtn.classList.remove('active');
+      } else {
+        langEnBtn.classList.add('active');
+        langJaBtn.classList.remove('active');
+      }
+    }
+
+    // ステータスバーの初期状態更新
+    if (statusName && (!statusSymbol || statusSymbol.textContent === '[ - ]')) {
+      statusName.textContent = dict.statusDefault || '';
+      if (statusDesc) statusDesc.textContent = '';
+    }
+
+    updateCharCount();
+  }
+
+  if (langJaBtn) {
+    langJaBtn.addEventListener('click', () => setLanguage('ja'));
+  }
+  if (langEnBtn) {
+    langEnBtn.addEventListener('click', () => setLanguage('en'));
+  }
+
+  // ==========================================================
   // UNDO履歴管理
+  // ==========================================================
   const historyStack = [];
   const maxHistory = 50;
 
@@ -36,8 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function undo() {
+    const dict = (window.IPA_I18N && window.IPA_I18N[currentLang]) || {};
     if (historyStack.length === 0) {
-      showToast('NOTHING TO UNDO');
+      showToast(dict.toastNothingToUndo || 'NOTHING TO UNDO');
       return;
     }
     const prevState = historyStack.pop();
@@ -45,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     textarea.setSelectionRange(prevState.start, prevState.end);
     textarea.focus();
     updateCharCount();
-    showToast('UNDO');
+    showToast(dict.toastUndo || 'UNDO');
   }
 
   // テキスト挿入ユーティリティ
@@ -129,9 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // クリップボードコピー
   async function copyToClipboard() {
+    const dict = (window.IPA_I18N && window.IPA_I18N[currentLang]) || {};
     const val = textarea.value;
     if (!val) {
-      showToast('NO CONTENT TO COPY');
+      showToast(dict.toastNoContent || 'NO CONTENT TO COPY');
       return;
     }
     try {
@@ -141,9 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         textarea.select();
         document.execCommand('copy');
       }
-      showToast('COPIED TO CLIPBOARD');
+      showToast(dict.toastCopied || 'COPIED TO CLIPBOARD');
     } catch (e) {
-      showToast('COPY FAILED');
+      showToast(dict.toastCopyFailed || 'COPY FAILED');
     }
   }
 
@@ -152,7 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const countBadge = document.getElementById('char-count');
     if (countBadge) {
       const len = [...textarea.value].length;
-      countBadge.textContent = `${len} CHARS`;
+      const dict = (window.IPA_I18N && window.IPA_I18N[currentLang]) || {};
+      const unit = dict.charCount || 'CHARS';
+      countBadge.textContent = `${len} ${unit}`;
     }
   }
 
@@ -176,7 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
       textarea.value = '';
       textarea.focus();
       updateCharCount();
-      showToast('CLEARED');
+      const dict = (window.IPA_I18N && window.IPA_I18N[currentLang]) || {};
+      showToast(dict.toastCleared || 'CLEARED');
     },
     'btn-copy': () => copyToClipboard(),
     'btn-undo': () => undo(),
@@ -184,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
       pushHistory();
       textarea.value = '/ɪntəˈnæʃənəl fəˈnɛtɪk ˈælfəbɛt/';
       updateCharCount();
-      showToast('SAMPLE INSERTED');
+      const dict = (window.IPA_I18N && window.IPA_I18N[currentLang]) || {};
+      showToast(dict.toastSampleInserted || 'SAMPLE INSERTED');
     }
   };
 
@@ -201,22 +300,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn) {
       const ipa = btn.getAttribute('data-ipa');
       const info = window.IPA_DATA && window.IPA_DATA[ipa];
-      const name = info ? info.name : ipa;
-      const en = info ? info.en : '';
-      const cat = info ? info.cat : '';
+      const isEn = currentLang === 'en';
+
+      let primaryName = '';
+      let secondaryName = '';
+      let category = '';
+
+      if (info) {
+        if (isEn) {
+          primaryName = info.en || info.name || ipa;
+          secondaryName = info.name && info.name !== primaryName ? info.name : '';
+          category = (window.IPA_CAT_EN && window.IPA_CAT_EN[info.cat]) || info.cat || '';
+        } else {
+          primaryName = info.name || ipa;
+          secondaryName = info.en || '';
+          category = info.cat || '';
+        }
+      } else {
+        primaryName = ipa;
+      }
 
       tooltip.innerHTML = `
         <div class="tt-symbol">${escapeHtml(ipa)}</div>
         <div class="tt-body">
-          <div class="tt-name">${escapeHtml(name)}</div>
-          ${en ? `<div class="tt-en">${escapeHtml(en)}</div>` : ''}
-          ${cat ? `<div class="tt-cat">${escapeHtml(cat)}</div>` : ''}
+          <div class="tt-name">${escapeHtml(primaryName)}</div>
+          ${secondaryName ? `<div class="tt-en">${escapeHtml(secondaryName)}</div>` : ''}
+          ${category ? `<div class="tt-cat">${escapeHtml(category)}</div>` : ''}
         </div>
       `;
       tooltip.style.display = 'flex';
 
-      const ttWidth = 260;
-      const ttHeight = 70;
+      const ttWidth = 270;
+      const ttHeight = 72;
       let left = e.clientX + 14;
       let top = e.clientY + 14;
 
@@ -231,8 +346,10 @@ document.addEventListener('DOMContentLoaded', () => {
       tooltip.style.top = `${top}px`;
 
       if (statusSymbol) statusSymbol.textContent = `[ ${ipa} ]`;
-      if (statusName) statusName.textContent = name;
-      if (statusDesc) statusDesc.textContent = en ? `(${en}) · ${cat}` : cat;
+      if (statusName) statusName.textContent = primaryName;
+      if (statusDesc) {
+        statusDesc.textContent = secondaryName ? `(${secondaryName}) · ${category}` : category;
+      }
     } else {
       tooltip.style.display = 'none';
     }
@@ -269,8 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // キーボードショートカット
   window.addEventListener('keydown', (e) => {
     // Ctrl+Z または Cmd+Z による UNDO
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
-      // モーダルが開いていない場合に実行
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'z') && !e.shiftKey) {
       if (!helpModal.classList.contains('active')) {
         e.preventDefault();
         undo();
@@ -318,6 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
+  // 初期言語の適用
+  const initialLang = getInitialLanguage();
+  setLanguage(initialLang);
 
   // 初期化カウント
   updateCharCount();
