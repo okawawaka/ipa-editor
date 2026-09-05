@@ -1,4 +1,4 @@
-﻿// 国際音声記号 (IPA) キーボード アプリケーションスクリプト (Swiss Style)
+// 国際音声記号 (IPA) キーボード アプリケーションスクリプト (Swiss Style)
 
 document.addEventListener('DOMContentLoaded', () => {
   const textarea = document.getElementById('ipa-input');
@@ -308,9 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (info) {
         if (isEn) {
-          primaryName = info.en || info.name || ipa;
-          secondaryName = info.name && info.name !== primaryName ? info.name : '';
-          category = (window.IPA_CAT_EN && window.IPA_CAT_EN[info.cat]) || info.cat || '';
+          primaryName = info.en || ipa;
+          secondaryName = ''; // 英語モード時は日本語を混在させず100%英語のみ
+          category = (window.IPA_CAT_EN && window.IPA_CAT_EN[info.cat]) || '';
         } else {
           primaryName = info.name || ipa;
           secondaryName = info.en || '';
@@ -348,7 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (statusSymbol) statusSymbol.textContent = `[ ${ipa} ]`;
       if (statusName) statusName.textContent = primaryName;
       if (statusDesc) {
-        statusDesc.textContent = secondaryName ? `(${secondaryName}) · ${category}` : category;
+        if (isEn) {
+          statusDesc.textContent = category;
+        } else {
+          statusDesc.textContent = secondaryName ? `(${secondaryName}) · ${category}` : category;
+        }
       }
     } else {
       tooltip.style.display = 'none';
