@@ -299,7 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.closest('button[data-ipa]');
     if (btn) {
       const ipa = btn.getAttribute('data-ipa');
-      const info = window.IPA_DATA && window.IPA_DATA[ipa];
+      const isJpBtn = btn.classList.contains('jp-vowel-btn');
+      const info = (isJpBtn && window.IPA_JP_DATA && window.IPA_JP_DATA[ipa])
+        ? window.IPA_JP_DATA[ipa]
+        : ((window.IPA_DATA && window.IPA_DATA[ipa]) || null);
       const isEn = currentLang === 'en';
 
       let primaryName = '';

@@ -302,7 +302,7 @@ window.IPA_DATA = {
   "a̠": { name: "あ：非円唇後寄り前舌広母音", en: "Japanese /a/: Open front retracted unrounded vowel", cat: "母音・広母音" },
   "ɑ̟": { name: "あ：非円唇前寄り後舌広母音", en: "Japanese /a/: Open back advanced unrounded vowel", cat: "母音・広母音" },
   "i̞": { name: "い：非円唇やや広めの前舌狭母音", en: "Japanese /i/: Lowered close front unrounded vowel", cat: "母音・狭母音" },
-  "u̜̟": { name: "う：弱円唇前寄り後舌狭母音（現代東京方言）", en: "Japanese /u/: Less rounded advanced back close vowel", cat: "母音・狭母音" },
+  "u̜̟": { name: "う：弱円唇前寄り後舌狭母音", en: "Japanese /u/: Less rounded advanced back close vowel", cat: "母音・狭母音" },
   "ɛ̝": { name: "え：非円唇やや狭めの前舌半広母音", en: "Japanese /e/: Raised open-mid front unrounded vowel", cat: "母音・半広母音" },
   "o̜̞": { name: "お：弱円唇やや広めの後舌半狭母音", en: "Japanese /o/: Lowered less rounded close-mid back vowel", cat: "母音・半狭母音" },
 
@@ -409,4 +409,16 @@ window.IPA_DATA = {
   "]": { name: "角括弧（精密表記終了）", en: "Right square bracket (narrow transcription)", cat: "表記記号" },
   "/": { name: "スラッシュ（音素表記・簡略表記）", en: "Slash (broad phonemic transcription)", cat: "表記記号" },
   " ": { name: "空白（スペース）", en: "Space", cat: "基本" }
+};
+
+// === 日本語母音（専用ホバーデータ：jp-vowel-btn 用） ===
+window.IPA_JP_DATA = {
+  "a̠": { name: "あ：非円唇後寄り前舌広母音", en: "Japanese /a/: Open front retracted unrounded vowel", cat: "母音・広母音" },
+  "ɑ̟": { name: "あ：非円唇前寄り後舌広母音", en: "Japanese /a/: Open back advanced unrounded vowel", cat: "母音・広母音" },
+  "i̞": { name: "い：非円唇やや広めの前舌狭母音", en: "Japanese /i/: Lowered close front unrounded vowel", cat: "母音・狭母音" },
+  "ɯ": { name: "う：非円唇後舌狭母音（東京方言伝統表記）", en: "Japanese /u/: Close back unrounded vowel (Traditional Tokyo)", cat: "母音・狭母音" },
+  "u̜̟": { name: "う：弱円唇前寄り後舌狭母音", en: "Japanese /u/: Less rounded advanced back close vowel", cat: "母音・狭母音" },
+  "e̞": { name: "え：非円唇前舌中央母音", en: "Japanese /e/: Mid front unrounded vowel", cat: "母音・中央母音" },
+  "ɛ̝": { name: "え：非円唇やや狭めの前舌半広母音", en: "Japanese /e/: Raised open-mid front unrounded vowel", cat: "母音・半広母音" },
+  "o̜̞": { name: "お：弱円唇やや広めの後舌半狭母音", en: "Japanese /o/: Lowered less rounded close-mid back vowel", cat: "母音・半狭母音" }
 };
