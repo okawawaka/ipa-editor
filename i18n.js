@@ -144,17 +144,6 @@ window.IPA_I18N = {
     // 日本語の母音 (Japanese Vowels)
     secJapaneseVowelsTitle: "日本語の母音 (JAPANESE VOWELS)",
     secJapaneseVowelsSub: "東京方言・共通語の母音台形",
-    thJpVowelKana: "かな",
-    thJpVowelIPA: "精密表記 (IPA)",
-    thJpVowelDesc: "調音・音響的特徴",
-    jpDescA1: "後ろ寄りのa",
-    jpDescA2: "前寄りのɑ",
-    jpDescI: "やや広めのi",
-    jpDescU1: "伝統的な東京方言の表記",
-    jpDescU2: "弱い唇の丸め・やや中舌より",
-    jpDescE: "eとɛの中間",
-    jpDescO: "oとɔの間で唇の丸めがやや弱い",
-    textOr: "または",
 
     // 補助記号カテゴリ
     catSyllabicityRelease: "音節性 & 子音解放 (SYLLABICITY & RELEASE)",
@@ -403,17 +392,6 @@ window.IPA_I18N = {
     // Japanese Vowels
     secJapaneseVowelsTitle: "JAPANESE VOWELS",
     secJapaneseVowelsSub: "Tokyo Japanese Vowel Trapezoid",
-    thJpVowelKana: "Kana",
-    thJpVowelIPA: "Narrow IPA",
-    thJpVowelDesc: "Articulatory & Acoustic Notes",
-    jpDescA1: "Retracted [a] (Back-leaning a)",
-    jpDescA2: "Advanced [ɑ] (Front-leaning ɑ)",
-    jpDescI: "Lowered [i] (Slightly more open)",
-    jpDescU1: "Traditional Tokyo transcription (Unrounded)",
-    jpDescU2: "Endolabial & advanced (Weak rounding)",
-    jpDescE: "Intermediate between [e] and [ɛ]",
-    jpDescO: "Mid vowel between [o] and [ɔ], weakly rounded",
-    textOr: "or",
 
     // Diacritic categories
     catSyllabicityRelease: "SYLLABICITY & RELEASE",

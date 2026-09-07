@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isEn) {
           statusDesc.textContent = category;
         } else {
-          statusDesc.textContent = secondaryName ? `(${secondaryName}) · ${category}` : category;
+          statusDesc.textContent = secondaryName ? `${secondaryName} · ${category}` : category;
         }
       }
     } else {
