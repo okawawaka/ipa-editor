@@ -793,68 +793,8 @@ button.ipa-btn.tone-btn {
 }
 
 /* ==========================================================
-   基本母音 (Cardinal Vowels) & 日本語母音 (Japanese Vowels)
+   日本語母音 (Japanese Vowels) セクション & 母音台形
    ========================================================== */
-.cardinal-vowels-box {
-  border-top: 1px solid var(--border-strong);
-  background: #fafafa;
-}
-
-.cardinal-vowels-header {
-  background: #f4f4f5;
-  border-bottom: 1px solid var(--border-light);
-  padding: 3px 8px;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text-main);
-}
-
-.cardinal-vowels-body {
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.cardinal-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.cardinal-badge {
-  font-family: var(--font-ui);
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--text-muted);
-  width: 140px;
-  flex-shrink: 0;
-}
-
-.cardinal-symbols {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.cardinal-symbols .ipa-btn {
-  width: 24px;
-  height: 24px;
-  font-size: 15px;
-}
-
-.cardinal-note {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  line-height: 1.4;
-}
-
 .japanese-vowels-block {
   border-top: 2px solid var(--border-strong);
   background: #ffffff;
@@ -877,6 +817,48 @@ button.ipa-btn.tone-btn {
   font-size: 9.5px;
   font-weight: 500;
   color: #a1a1aa;
+}
+
+.jp-vowel-board {
+  border-bottom: 1px solid var(--border-light);
+  background: #fafafa;
+}
+
+.jp-vowel-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  white-space: nowrap;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2px 4px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.jp-node-kana {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  color: #18181b;
+  background: #f4f4f5;
+  padding: 1px 4px;
+  line-height: 1.2;
+}
+
+.jp-node-sep {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.jp-vowel-node .ipa-btn {
+  min-width: 26px;
+  height: 24px;
+  padding: 0 4px;
+  font-size: 14px;
 }
 
 .jp-vowel-table {

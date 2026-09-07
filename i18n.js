@@ -141,15 +141,9 @@ window.IPA_I18N = {
     vowelCentral: "中舌 (Central)",
     vowelBack: "後舌 (Back)",
 
-    // 基本母音 (Cardinal Vowels)
-    cardinalVowelsTitle: "基本母音 (CARDINAL VOWELS)",
-    cardinalPrimary: "第一次基本母音",
-    cardinalSecondary: "第二次基本母音",
-    cardinalNote: "※ 記号が2つ並ぶ箇所は、左が非円唇 (Unrounded)、右が円唇 (Rounded) を表します。",
-
     // 日本語の母音 (Japanese Vowels)
     secJapaneseVowelsTitle: "日本語の母音 (JAPANESE VOWELS)",
-    secJapaneseVowelsSub: "東京方言・共通語の音声学的精密表記",
+    secJapaneseVowelsSub: "東京方言・共通語の母音台形",
     thJpVowelKana: "かな",
     thJpVowelIPA: "精密表記 (IPA)",
     thJpVowelDesc: "調音・音響的特徴",
@@ -406,15 +400,9 @@ window.IPA_I18N = {
     vowelCentral: "Central",
     vowelBack: "Back",
 
-    // Cardinal Vowels
-    cardinalVowelsTitle: "CARDINAL VOWELS",
-    cardinalPrimary: "Primary Cardinal Vowels",
-    cardinalSecondary: "Secondary Cardinal Vowels",
-    cardinalNote: "* Where symbols appear in pairs, the left represents an unrounded vowel and the right a rounded vowel.",
-
     // Japanese Vowels
     secJapaneseVowelsTitle: "JAPANESE VOWELS",
-    secJapaneseVowelsSub: "Phonetic Narrow Transcription (Standard Tokyo Japanese)",
+    secJapaneseVowelsSub: "Tokyo Japanese Vowel Trapezoid",
     thJpVowelKana: "Kana",
     thJpVowelIPA: "Narrow IPA",
     thJpVowelDesc: "Articulatory & Acoustic Notes",
