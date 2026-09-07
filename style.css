@@ -793,6 +793,163 @@ button.ipa-btn.tone-btn {
 }
 
 /* ==========================================================
+   基本母音 (Cardinal Vowels) & 日本語母音 (Japanese Vowels)
+   ========================================================== */
+.cardinal-vowels-box {
+  border-top: 1px solid var(--border-strong);
+  background: #fafafa;
+}
+
+.cardinal-vowels-header {
+  background: #f4f4f5;
+  border-bottom: 1px solid var(--border-light);
+  padding: 3px 8px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-main);
+}
+
+.cardinal-vowels-body {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardinal-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cardinal-badge {
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.cardinal-symbols {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cardinal-symbols .ipa-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 15px;
+}
+
+.cardinal-note {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.japanese-vowels-block {
+  border-top: 2px solid var(--border-strong);
+  background: #ffffff;
+}
+
+.japanese-vowels-header {
+  background: var(--bg-header);
+  color: var(--text-header);
+  padding: 4px 8px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.japanese-vowels-header .sub {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+.jp-vowel-table {
+  width: 100%;
+  min-width: 100% !important;
+}
+
+.jp-vowel-table td {
+  padding: 5px 6px;
+  height: auto;
+  min-height: 32px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.jp-vowel-kana {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 12.5px;
+  text-align: center !important;
+  background: #fafafa;
+  white-space: nowrap;
+}
+
+.jp-vowel-phoneme {
+  font-family: var(--font-ipa);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.jp-vowel-ipa {
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+.jp-ipa-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.jp-ipa-group .ipa-btn {
+  min-width: 28px;
+  height: 26px;
+  padding: 0 4px;
+  font-size: 15px;
+}
+
+.jp-or-text {
+  font-family: var(--font-ui);
+  font-size: 9.5px;
+  color: var(--text-muted);
+  margin: 0 2px;
+}
+
+.jp-vowel-desc {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.jp-sym-ref {
+  font-family: var(--font-ipa);
+  font-weight: 700;
+  color: #18181b;
+}
+
+/* ==========================================================
    スマートツールチップ（スイス・タイポグラフィ仕様）
    ========================================================== */
 #smart-tooltip {
@@ -1105,6 +1262,10 @@ button.ipa-btn.tone-btn {
   .swiss-table,
   .swiss-table-list {
     min-width: 600px;
+  }
+
+  .jp-vowel-table {
+    min-width: 100% !important;
   }
 
   .swiss-table td, .swiss-table th,

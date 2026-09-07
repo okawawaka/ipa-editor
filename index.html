@@ -29,10 +29,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=5">
-  <script src="data.js?v=5" defer></script>
-  <script src="i18n.js?v=5" defer></script>
-  <script src="app.js?v=5" defer></script>
+  <link rel="stylesheet" href="style.css?v=6">
+  <script src="data.js?v=6" defer></script>
+  <script src="i18n.js?v=6" defer></script>
+  <script src="app.js?v=6" defer></script>
 </head>
 <body>
 
@@ -776,6 +776,124 @@
             <span data-i18n="vowelFront">前舌 (Front)</span>
             <span data-i18n="vowelCentral">中舌 (Central)</span>
             <span data-i18n="vowelBack">後舌 (Back)</span>
+          </div>
+        </div>
+
+        <!-- 基本母音 (CARDINAL VOWELS) 解説バー -->
+        <div class="cardinal-vowels-box">
+          <div class="cardinal-vowels-header">
+            <span data-i18n="cardinalVowelsTitle">基本母音 (CARDINAL VOWELS)</span>
+          </div>
+          <div class="cardinal-vowels-body">
+            <div class="cardinal-row">
+              <span class="cardinal-badge" data-i18n="cardinalPrimary">第一次基本母音</span>
+              <div class="cardinal-symbols">
+                <button type="button" class="ipa-btn" data-ipa="i">i</button>
+                <button type="button" class="ipa-btn" data-ipa="e">e</button>
+                <button type="button" class="ipa-btn" data-ipa="ɛ">ɛ</button>
+                <button type="button" class="ipa-btn" data-ipa="a">a</button>
+                <button type="button" class="ipa-btn" data-ipa="ɒ">ɒ</button>
+                <button type="button" class="ipa-btn" data-ipa="ɔ">ɔ</button>
+                <button type="button" class="ipa-btn" data-ipa="o">o</button>
+                <button type="button" class="ipa-btn" data-ipa="u">u</button>
+              </div>
+            </div>
+            <div class="cardinal-row">
+              <span class="cardinal-badge" data-i18n="cardinalSecondary">第二次基本母音</span>
+              <div class="cardinal-symbols">
+                <button type="button" class="ipa-btn" data-ipa="y">y</button>
+                <button type="button" class="ipa-btn" data-ipa="ø">ø</button>
+                <button type="button" class="ipa-btn" data-ipa="œ">œ</button>
+                <button type="button" class="ipa-btn" data-ipa="ɶ">ɶ</button>
+                <button type="button" class="ipa-btn" data-ipa="ɑ">ɑ</button>
+                <button type="button" class="ipa-btn" data-ipa="ʌ">ʌ</button>
+                <button type="button" class="ipa-btn" data-ipa="ɤ">ɤ</button>
+                <button type="button" class="ipa-btn" data-ipa="ɯ">ɯ</button>
+              </div>
+            </div>
+            <div class="cardinal-note" data-i18n="cardinalNote">※ 記号が2つ並ぶ箇所は、左が非円唇 (Unrounded)、右が円唇 (Rounded) を表します。</div>
+          </div>
+        </div>
+
+        <!-- 日本語の母音 (JAPANESE VOWELS) 単体セクション -->
+        <div class="japanese-vowels-block">
+          <div class="japanese-vowels-header">
+            <span data-i18n="secJapaneseVowelsTitle">日本語の母音 (JAPANESE VOWELS)</span>
+            <span class="sub" data-i18n="secJapaneseVowelsSub">東京方言・共通語の音声学的精密表記</span>
+          </div>
+          <div class="table-responsive">
+            <table class="swiss-table jp-vowel-table">
+              <thead>
+                <tr class="header-row">
+                  <th style="width: 14%;" data-i18n="thJpVowelKana">かな</th>
+                  <th style="width: 32%;" data-i18n="thJpVowelIPA">精密表記 (IPA)</th>
+                  <th style="width: 54%;" data-i18n="thJpVowelDesc">調音・音響的特徴</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="jp-vowel-kana">あ <span class="jp-vowel-phoneme">/a/</span></td>
+                  <td class="jp-vowel-ipa">
+                    <div class="jp-ipa-group">
+                      <button type="button" class="ipa-btn" data-ipa="a̠">a̠</button>
+                      <button type="button" class="ipa-btn" data-ipa="ɑ̟">ɑ̟</button>
+                    </div>
+                  </td>
+                  <td class="jp-vowel-desc">
+                    <div><span class="jp-sym-ref">a̠</span>: <span data-i18n="jpDescA1">後ろ寄りのa</span></div>
+                    <div><span class="jp-sym-ref">ɑ̟</span>: <span data-i18n="jpDescA2">前寄りのɑ</span></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="jp-vowel-kana">い <span class="jp-vowel-phoneme">/i/</span></td>
+                  <td class="jp-vowel-ipa">
+                    <div class="jp-ipa-group">
+                      <button type="button" class="ipa-btn" data-ipa="i̞">i̞</button>
+                    </div>
+                  </td>
+                  <td class="jp-vowel-desc">
+                    <div><span class="jp-sym-ref">i̞</span>: <span data-i18n="jpDescI">やや広めのi</span></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="jp-vowel-kana">う <span class="jp-vowel-phoneme">/u/</span></td>
+                  <td class="jp-vowel-ipa">
+                    <div class="jp-ipa-group">
+                      <button type="button" class="ipa-btn" data-ipa="ɯ">ɯ</button>
+                      <button type="button" class="ipa-btn" data-ipa="u̜̟">u̜̟</button>
+                    </div>
+                  </td>
+                  <td class="jp-vowel-desc">
+                    <div><span class="jp-sym-ref">ɯ</span>: <span data-i18n="jpDescU1">伝統的な東京方言の表記</span></div>
+                    <div><span class="jp-sym-ref">u̜̟</span>: <span data-i18n="jpDescU2">弱い唇の丸め・やや中舌より</span></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="jp-vowel-kana">え <span class="jp-vowel-phoneme">/e/</span></td>
+                  <td class="jp-vowel-ipa">
+                    <div class="jp-ipa-group">
+                      <button type="button" class="ipa-btn" data-ipa="e̞">e̞</button>
+                      <span class="jp-or-text" data-i18n="textOr">または</span>
+                      <button type="button" class="ipa-btn" data-ipa="ɛ̝">ɛ̝</button>
+                    </div>
+                  </td>
+                  <td class="jp-vowel-desc">
+                    <div><span data-i18n="jpDescE">eとɛの中間</span></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="jp-vowel-kana">お <span class="jp-vowel-phoneme">/o/</span></td>
+                  <td class="jp-vowel-ipa">
+                    <div class="jp-ipa-group">
+                      <button type="button" class="ipa-btn" data-ipa="o̜̞">o̜̞</button>
+                    </div>
+                  </td>
+                  <td class="jp-vowel-desc">
+                    <div><span data-i18n="jpDescO">oとɔの間で唇の丸めがやや弱い</span></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

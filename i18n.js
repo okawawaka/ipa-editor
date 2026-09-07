@@ -141,6 +141,27 @@ window.IPA_I18N = {
     vowelCentral: "中舌 (Central)",
     vowelBack: "後舌 (Back)",
 
+    // 基本母音 (Cardinal Vowels)
+    cardinalVowelsTitle: "基本母音 (CARDINAL VOWELS)",
+    cardinalPrimary: "第一次基本母音",
+    cardinalSecondary: "第二次基本母音",
+    cardinalNote: "※ 記号が2つ並ぶ箇所は、左が非円唇 (Unrounded)、右が円唇 (Rounded) を表します。",
+
+    // 日本語の母音 (Japanese Vowels)
+    secJapaneseVowelsTitle: "日本語の母音 (JAPANESE VOWELS)",
+    secJapaneseVowelsSub: "東京方言・共通語の音声学的精密表記",
+    thJpVowelKana: "かな",
+    thJpVowelIPA: "精密表記 (IPA)",
+    thJpVowelDesc: "調音・音響的特徴",
+    jpDescA1: "後ろ寄りのa",
+    jpDescA2: "前寄りのɑ",
+    jpDescI: "やや広めのi",
+    jpDescU1: "伝統的な東京方言の表記",
+    jpDescU2: "弱い唇の丸め・やや中舌より",
+    jpDescE: "eとɛの中間",
+    jpDescO: "oとɔの間で唇の丸めがやや弱い",
+    textOr: "または",
+
     // 補助記号カテゴリ
     catSyllabicityRelease: "音節性 & 子音解放 (SYLLABICITY & RELEASE)",
     catPhonation: "発声・声門状態 (PHONATION)",
@@ -384,6 +405,27 @@ window.IPA_I18N = {
     vowelFront: "Front",
     vowelCentral: "Central",
     vowelBack: "Back",
+
+    // Cardinal Vowels
+    cardinalVowelsTitle: "CARDINAL VOWELS",
+    cardinalPrimary: "Primary Cardinal Vowels",
+    cardinalSecondary: "Secondary Cardinal Vowels",
+    cardinalNote: "* Where symbols appear in pairs, the left represents an unrounded vowel and the right a rounded vowel.",
+
+    // Japanese Vowels
+    secJapaneseVowelsTitle: "JAPANESE VOWELS",
+    secJapaneseVowelsSub: "Phonetic Narrow Transcription (Standard Tokyo Japanese)",
+    thJpVowelKana: "Kana",
+    thJpVowelIPA: "Narrow IPA",
+    thJpVowelDesc: "Articulatory & Acoustic Notes",
+    jpDescA1: "Retracted [a] (Back-leaning a)",
+    jpDescA2: "Advanced [ɑ] (Front-leaning ɑ)",
+    jpDescI: "Lowered [i] (Slightly more open)",
+    jpDescU1: "Traditional Tokyo transcription (Unrounded)",
+    jpDescU2: "Endolabial & advanced (Weak rounding)",
+    jpDescE: "Intermediate between [e] and [ɛ]",
+    jpDescO: "Mid vowel between [o] and [ɔ], weakly rounded",
+    textOr: "or",
 
     // Diacritic categories
     catSyllabicityRelease: "SYLLABICITY & RELEASE",

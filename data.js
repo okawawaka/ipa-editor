@@ -298,6 +298,14 @@ window.IPA_DATA = {
   "ɑ": { name: "非円唇後舌広母音", en: "Open back unrounded vowel", cat: "母音・広母音" },
   "ɒ": { name: "円唇後舌広母音", en: "Open back rounded vowel", cat: "母音・広母音" },
 
+  // === 日本語母音（異音・精密表記） ===
+  "a̠": { name: "非円唇後寄り前舌広母音（日本語「あ」標準）", en: "Open front retracted unrounded vowel (Japanese /a/)", cat: "母音・広母音" },
+  "ɑ̟": { name: "非円唇前寄り後舌広母音（日本語「あ」異音）", en: "Open back advanced unrounded vowel (Japanese /a/ variant)", cat: "母音・広母音" },
+  "i̞": { name: "非円唇やや広めの前舌狭母音（日本語「い」）", en: "Lowered close front unrounded vowel (Japanese /i/)", cat: "母音・狭母音" },
+  "u̜̟": { name: "弱円唇前寄り後舌狭母音（日本語「う」現代東京方言）", en: "Less rounded advanced back close vowel (Japanese /u/)", cat: "母音・狭母音" },
+  "ɛ̝": { name: "非円唇やや狭めの前舌半広母音（日本語「え」）", en: "Raised open-mid front unrounded vowel (Japanese /e/)", cat: "母音・半広母音" },
+  "o̜̞": { name: "弱円唇やや広めの後舌半狭母音（日本語「お」）", en: "Lowered less rounded close-mid back vowel (Japanese /o/)", cat: "母音・半狭母音" },
+
   // === 補助記号（ダイアクリティカルマーク） ===
   // 1. 音節性 (Syllabicity)
   "̩": { name: "音節主音（下符）", en: "Syllabic", cat: "補助記号・音節性" },
